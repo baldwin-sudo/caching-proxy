@@ -1,0 +1,3 @@
+- add cmake building
+- add conccurrent connections to the proxy
+- handle other http methods other than get
