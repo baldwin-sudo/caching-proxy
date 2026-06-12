@@ -20,10 +20,16 @@ std::optional<std::string> get(std::string key){
     void put(std::string key, std::string val)
     {
         // acquiring lock
-        std::shared_lock lock(mu_);
-
+        std::unique_lock lock(mu_);
+        
         cache.insert(key, val);
         // releasing lock lock
+        lock.unlock();
+    }
+    void invalidate(){
+        
+        std::unique_lock lock(mu_);
+        cache.clear();
         lock.unlock();
     }
 };
