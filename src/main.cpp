@@ -11,14 +11,14 @@ int main(int argc, char *argv[])
         std::cerr << "Example: app 8080 http://jsonplaceholder.typicode.com\n";
         return 1;
     }
-
+    // TODO: handle args parsing  gracefully
     int port = std::stoi(argv[1]);
     std::string origin = argv[2];
 
     proxy p(origin);
     httplib::Server svr;
 
-    // catch-all GET handler
+    //  GET handler
     svr.Get(".*", [&p](const httplib::Request &req, httplib::Response &res)
             {
         auto result = p.Get(req.path);
