@@ -1,10 +1,42 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Cache_proxy VERSION 1.0 LANGUAGES CXX)
+project(caching_proxy LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(Threads REQUIRED)
 
-add_executable(proxy
-main.cpp
+
+# -----------------------
+# Core logic (compiled once)
+# -----------------------
+add_library(core
+    src/cache.cpp
+    src/proxy.cpp
 )
+
+target_include_directories(core PUBLIC include)
+
+# -----------------------
+# Main app
+# -----------------------
+add_executable(app
+    src/main.cpp
+)
+
+target_link_libraries(app PRIVATE core)
+
+# -----------------------
+# Tests
+# -----------------------
+add_executable(test_cache
+    tests/test_cache.cpp
+)
+
+target_link_libraries(test_cache PRIVATE core)
+
+add_executable(test_proxy
+    tests/test_proxy.cpp
+)
+
+target_link_libraries(test_proxy PRIVATE core Threads::Threads)
